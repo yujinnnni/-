@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工程测试技术实验数据处理</title>
+  <meta name="theme-color" content="#1e88e5">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>工程测试技术实验数据处理</h1>
+    <p>实验：温度测量、流量测量、压力及流速测量</p>
+  </header>
+
+  <main class="app-main">
+    <nav class="tabs" role="tablist" aria-label="实验切换">
+      <button class="tab active" data-tab="temp" aria-selected="true">温度测量</button>
+      <button class="tab" data-tab="flow">流量测量</button>
+      <button class="tab" data-tab="pressure">压力及流速测量</button>
+    </nav>
+
+    <section class="toolbar">
+      <label class="file-import">
+        <input id="import-file" type="file" accept=".csv,.xlsx,.xls,.txt" />
+        <span>导入CSV</span>
+      </label>
+      <button id="export-results" class="secondary">导出结果CSV</button>
+      <button id="reset-all" class="ghost">清空所有</button>
+    </section>
+
+    <section id="panel-temp" class="panel active" role="tabpanel">
+      <h2>温度测量及标定</h2>
+      <div class="form-and-result">
+        <form id="form-temp" class="data-form">
+          <p class="hint">每种温度计连续记录5次读数，热电偶/热电阻温度值需“查分度表”后填写对应温度列。</p>
+          <div class="grid-2">
+            <fieldset>
+              <legend>标准水银温度计（℃）</legend>
+              <div class="row5" data-name="std_thermo_t"></div>
+            </fieldset>
+            <fieldset>
+              <legend>K型热电偶（mV→℃，查表后填温度）</legend>
+              <div class="row5" data-name="k_mv"></div>
+              <div class="row5" data-name="k_t"></div>
+            </fieldset>
+            <fieldset>
+              <legend>E型热电偶（mV→℃，查表后填温度）</legend>
+              <div class="row5" data-name="e_mv"></div>
+              <div class="row5" data-name="e_t"></div>
+            </fieldset>
+            <fieldset>
+              <legend>T型热电偶（mV→℃，查表后填温度）</legend>
+              <div class="row5" data-name="t_mv"></div>
+              <div class="row5" data-name="t_t"></div>
+            </fieldset>
+            <fieldset>
+              <legend>Pt100 热电阻（Ω→℃，查表后填温度）</legend>
+              <div class="row5" data-name="pt100_r"></div>
+              <div class="row5" data-name="pt100_t"></div>
+            </fieldset>
+            <fieldset>
+              <legend>Cu50 热电阻（Ω→℃，查表后填温度）</legend>
+              <div class="row5" data-name="cu50_r"></div>
+              <div class="row5" data-name="cu50_t"></div>
+            </fieldset>
+            <fieldset>
+              <legend>双金属温度计（℃）</legend>
+              <div class="row5" data-name="bimetal_t"></div>
+            </fieldset>
+            <fieldset>
+              <legend>压力式温度计（℃）</legend>
+              <div class="row5" data-name="pressure_t"></div>
+            </fieldset>
+          </div>
+          <div class="form-actions">
+            <button type="button" data-action="calc-temp">计算均值与标准误差</button>
+            <button type="button" class="secondary" data-action="lookup-temp">热电偶/热电阻 查表换算</button>
+          </div>
+        </form>
+        <div class="result" id="result-temp">
+          <h3>计算步骤与结果</h3>
+          <ol class="steps" data-steps-for="temp"></ol>
+          <div class="final">
+            <div class="final-row"><span class="key">标准温度计平均值 Tstd (℃)</span><span class="value" data-final="temp.Tstd"></span></div>
+            <div class="final-row"><span class="key">K型 测量平均值 (mV)</span><span class="value" data-final="temp.KmvAvg"></span></div>
+            <div class="final-row"><span class="key">K型 温度平均值 (℃)</span><span class="value" data-final="temp.Kavg"></span></div>
+            <div class="final-row"><span class="key">E型 测量平均值 (mV)</span><span class="value" data-final="temp.EmvAvg"></span></div>
+            <div class="final-row"><span class="key">E型 温度平均值 (℃)</span><span class="value" data-final="temp.Eavg"></span></div>
+            <div class="final-row"><span class="key">T型 测量平均值 (mV)</span><span class="value" data-final="temp.TmvAvg"></span></div>
+            <div class="final-row"><span class="key">T型 温度平均值 (℃)</span><span class="value" data-final="temp.TtypeAvg"></span></div>
+            <div class="final-row"><span class="key">Pt100 测量平均值 (Ω)</span><span class="value" data-final="temp.Pt100Ravg"></span></div>
+            <div class="final-row"><span class="key">Pt100 温度平均值 (℃)</span><span class="value" data-final="temp.Pt100avg"></span></div>
+            <div class="final-row"><span class="key">Cu50 测量平均值 (Ω)</span><span class="value" data-final="temp.Cu50Ravg"></span></div>
+            <div class="final-row"><span class="key">Cu50 温度平均值 (℃)</span><span class="value" data-final="temp.Cu50avg"></span></div>
+            <div class="final-row"><span class="key">双金属 温度平均值 (℃)</span><span class="value" data-final="temp.Bimetalavg"></span></div>
+            <div class="final-row"><span class="key">压力式 温度平均值 (℃)</span><span class="value" data-final="temp.Pressureavg"></span></div>
+            <div class="final-row"><span class="key">K型 标准误差 σ</span><span class="value" data-final="temp.Ksigma"></span></div>
+            <div class="final-row"><span class="key">E型 标准误差 σ</span><span class="value" data-final="temp.Esigma"></span></div>
+            <div class="final-row"><span class="key">T型 标准误差 σ</span><span class="value" data-final="temp.Ttypesigma"></span></div>
+            <div class="final-row"><span class="key">Pt100 标准误差 σ</span><span class="value" data-final="temp.Pt100sigma"></span></div>
+            <div class="final-row"><span class="key">Cu50 标准误差 σ</span><span class="value" data-final="temp.Cu50sigma"></span></div>
+            <div class="final-row"><span class="key">双金属 标准误差 σ</span><span class="value" data-final="temp.Bimetalsigma"></span></div>
+            <div class="final-row"><span class="key">压力式 标准误差 σ</span><span class="value" data-final="temp.Pressuresigma"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-flow" class="panel" role="tabpanel">
+      <h2>流量测量及标定</h2>
+      <div class="form-and-result">
+        <form id="form-flow" class="data-form">
+          <p class="hint">按装置选择气体/液体系统；参考仪表：气体用涡街，液体用涡轮。</p>
+          <div class="form-row">
+            <label>实验介质</label>
+            <select name="medium">
+              <option value="gas">气体系统</option>
+              <option value="liquid">液体系统</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>介质温度 T (℃)</label>
+            <input type="number" name="T_medium" step="0.1" placeholder="用于ρ与ν(T)查表" />
+          </div>
+          <fieldset>
+            <legend>参考流量计（标定值，5次，m³/h）</legend>
+            <div class="row5" data-name="ref_q"></div>
+          </fieldset>
+          <fieldset>
+            <legend>压差节流流量计</legend>
+            <div class="form-row">
+              <label>选择类型</label>
+              <select name="dp_type">
+                <option value="orifice">孔板（式1）</option>
+                <option value="venturi">文丘里（式2）</option>
+              </select>
+            </div>
+            <div class="row5" data-name="dp_kpa"></div>
+            <div class="form-row"><label>流体密度 ρ (kg/m³)</label><input type="number" name="rho" step="0.001" /></div>
+            <div class="form-row when-orifice"><label>孔板开孔直径 d (m)</label><input type="number" name="d_orifice" step="0.000001" placeholder="气体常用 0.017 或 0.013" /></div>
+            <div class="form-row when-orifice"><label>管道直径 D (m)</label><input type="number" name="D_orifice" step="0.000001" placeholder="气体常用 0.034" /></div>
+            <div class="form-row when-orifice"><label>流量系数 α*</label><input type="number" name="alpha" step="0.0001" placeholder="按Re查表填写" /></div>
+            <div class="form-row when-venturi"><label>喉道直径 d (m)</label><input type="number" name="d_venturi" step="0.000001" placeholder="液体 0.0065" /></div>
+            <div class="form-row when-venturi"><label>管道直径 D (m)</label><input type="number" name="D_venturi" step="0.000001" placeholder="液体 0.016" /></div>
+          </fieldset>
+          <fieldset>
+            <legend>流速法（毕托）（式3，5次ΔP，kPa）</legend>
+            <div class="row5" data-name="pitot_kpa"></div>
+            <div class="form-row"><label>管道直径 D (m)</label><input type="number" name="D_pitot" step="0.000001" /></div>
+            <div class="form-row"><label>流体密度 ρ (kg/m³)</label><input type="number" name="rho_pitot" step="0.001" /></div>
+          </fieldset>
+          <div class="form-actions">
+            <button type="button" data-action="calc-flow">计算各法流量与标准误差</button>
+            <button type="button" class="secondary" data-action="props-re-alpha">物性/雷诺数/α* 查表</button>
+          </div>
+        </form>
+        <div class="result" id="result-flow">
+          <h3>计算步骤与结果</h3>
+          <ol class="steps" data-steps-for="flow"></ol>
+          <div class="final">
+            <div class="final-row"><span class="key">参考流量均值 Qref (m³/h)</span><span class="value" data-final="flow.Qref"></span></div>
+            <div class="final-row"><span class="key">孔板/文丘里流量均值 (m³/h)</span><span class="value" data-final="flow.Qdp"></span></div>
+            <div class="final-row"><span class="key">孔板/文丘里 标准误差 σ</span><span class="value" data-final="flow.sigma_dp"></span></div>
+            <div class="final-row"><span class="key">毕托流量均值 (m³/h)</span><span class="value" data-final="flow.Qpitot"></span></div>
+            <div class="final-row"><span class="key">毕托 标准误差 σ</span><span class="value" data-final="flow.sigma_pitot"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-pressure" class="panel" role="tabpanel">
+      <h2>压力及流速测量</h2>
+      <div class="form-and-result">
+        <form id="form-pressure" class="data-form">
+          <p class="hint">每项测量连续5次取平均；压力最大相对误差按 δmax = δ·A0/A% 计算。</p>
+          <fieldset>
+            <legend>压力计/传感器读数（MPa 或 kPa）</legend>
+            <div class="grid-2">
+              <div>
+                <label>某压力计（5次，同单位）</label>
+                <div class="row5" data-name="p_series"></div>
+              </div>
+              <div>
+                <label>精度等级 δ、量程 A0、平均读数 A</label>
+                <div class="form-row"><label>精度等级 δ</label><input type="number" name="delta_class" step="0.01" placeholder="如 1.6 或 0.1" /></div>
+                <div class="form-row"><label>量程 A0（同单位）</label><input type="number" name="range_A0" step="0.0001" /></div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>速度探针压差（毕托/笛形，kPa）与密度 ρ</legend>
+            <div class="row5" data-name="dp_speed"></div>
+            <div class="form-row"><label>流体密度 ρ (kg/m³)</label><input type="number" name="rho_speed" step="0.001" /></div>
+          </fieldset>
+          <div class="form-actions">
+            <button type="button" data-action="calc-pressure">开始计算</button>
+          </div>
+        </form>
+        <div class="result" id="result-pressure">
+          <h3>计算步骤与结果</h3>
+          <ol class="steps" data-steps-for="pressure"></ol>
+          <div class="final">
+            <div class="final-row"><span class="key">压力平均值 A</span><span class="value" data-final="pressure.Pavg"></span></div>
+            <div class="final-row"><span class="key">最大相对误差 δmax (%)</span><span class="value" data-final="pressure.deltaMax"></span></div>
+            <div class="final-row"><span class="key">流速均值 v (m/s)</span><span class="value" data-final="pressure.vavg"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <small>请根据《工程测试技术实验-温度，流量，压力及流速测量实验指导书202509》补全或调整系数与公式。</small>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
+
+

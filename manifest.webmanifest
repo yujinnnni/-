@@ -1,0 +1,10 @@
+{
+  "name": "工程测试技术实验数据处理",
+  "short_name": "工程测试实验",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e88e5",
+  "lang": "zh-CN",
+  "icons": []
+}
