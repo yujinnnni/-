@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>工程测试技术实验数据处理</title>
-  <meta name="theme-color" content="#1e88e5">
-  <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -32,7 +30,7 @@
 
     <section id="panel-temp" class="panel active" role="tabpanel">
       <h2>温度测量及标定</h2>
-      <div class="form-and-result">
+      <div class="form-and-result stacked">
         <form id="form-temp" class="data-form">
           <p class="hint">每种温度计连续记录5次读数，热电偶/热电阻温度值需“查分度表”后填写对应温度列。</p>
           <div class="grid-2">
@@ -110,7 +108,7 @@
 
     <section id="panel-flow" class="panel" role="tabpanel">
       <h2>流量测量及标定</h2>
-      <div class="form-and-result">
+      <div class="form-and-result stacked">
         <form id="form-flow" class="data-form">
           <p class="hint">按装置选择气体/液体系统；参考仪表：气体用涡街，液体用涡轮。</p>
           <div class="form-row">
@@ -172,7 +170,7 @@
 
     <section id="panel-pressure" class="panel" role="tabpanel">
       <h2>压力及流速测量</h2>
-      <div class="form-and-result">
+      <div class="form-and-result stacked">
         <form id="form-pressure" class="data-form">
           <p class="hint">每项测量连续5次取平均；压力最大相对误差按 δmax = δ·A0/A% 计算。</p>
           <fieldset>

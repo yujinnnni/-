@@ -167,4 +167,7 @@ legend { color: var(--text); font-size: 14px; padding: 0 6px; }
 
 .app-footer { color: var(--muted); text-align: center; padding: 20px; }
 
+.form-and-result.stacked { grid-template-columns: 1fr !important; }
+.data-form { position: relative; z-index: 2; min-width: 0; }
+.result { position: relative; z-index: 1; }
 

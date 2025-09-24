@@ -536,11 +536,4 @@ function bindEvents() {
 
 document.addEventListener('DOMContentLoaded', bindEvents);
 
-// 注册 Service Worker（PWA 离线）
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  });
-}
-
 
